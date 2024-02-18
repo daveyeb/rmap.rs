@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    {{!-- <script src="/public/scripts/htmx.js"></script> --}}
+    <script src="https://unpkg.com/htmx.org" crossorigin></script>
+    <script src="/dist/public/scripts/jquery.js" ></script>
+    <script src="/public/scripts/index.js?count={{coins}}" type="module"></script>
+    <title>{{title}}</title>
+</head>
+
+<body>
+    {{> (lookup this "navigation")}}
+    <div class="rel">
+        {{> graph__view }}
+        <div id="container">
+            <main
+                class="main abs pt-4 ray-grid__cell--span-12-desktop ray-grid justify-content-center align-self-center "
+                id="main">
+                <div id="search-results" class="ray-grid__cell--span-full"></div>
+                <div class="ray-grid__cell--span-full ray-grid justify-content-center align-self-center" id="dash-container">
+                    {{> (lookup this "page") }}
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="/dist/public/scripts/ray-core.js"></script>
+    <script src="/dist/public/scripts/client.js" type="module"></script>
+    <script type="module" src="/dist/public/scripts/progress-bar.js"></script>
+    <script>
+        $('.test').css('height', `${$('main').height()}px`)
+    </script>
+</body>
+
+</html>

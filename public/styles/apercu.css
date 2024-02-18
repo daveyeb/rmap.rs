@@ -1,0 +1,33 @@
+@font-face {
+    font-family: 'Apercu';
+    src: url('/public/fonts/apercu_light.woff2') format('woff2'),
+      url('/public/fonts/apercu_light.woff') format('woff'),
+      url('/public/fonts/apercu_light.ttf') format('opentype'),
+      url('/public/fonts/apercu_light.eot')
+        format('embedded-opentype');
+    font-weight: 200;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'Apercu';
+    src: url('/public/fonts/apercu_regular_webfont.woff')
+        format('woff'),
+      url('/public/fonts/apercu_regular_webfont.ttf')
+        format('opentype'),
+      url('/public/fonts/apercu_regular_webfont.eot')
+        format('embedded-opentype');
+    font-weight: 400;
+    font-display: swap;
+  }
+  
+  @font-face {
+    font-family: 'Apercu';
+    src: url('/public/fonts/apercu_bold.woff2') format('woff2'),
+      url('/public/fonts/apercu_bold.woff') format('woff'),
+      url('/public/fonts/apercu_bold.ttf') format('opentype'),
+      url('/public/fonts/apercu_bold.eot')
+        format('embedded-opentype');
+    font-weight: 600;
+    font-display: swap;
+  }

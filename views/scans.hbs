@@ -1,0 +1,18 @@
+<td>{{scan.name}}</td>
+<td class="flex justify-content-center">
+    {{#if scan.is_done}}
+    <button class="ray-button ray-button--secondary ray-button--compact" id="load-btn">
+        Load
+    </button>
+    {{else}}
+    {{#if scan.is_error}}
+    <button class="ray-button ray-button--secondary ray-button--compact">
+        Retry
+    </button>
+    {{else}}
+    <div class="progress-bar">
+        {{> progress__bar class_name=scan.class_name }}
+    </div>
+    {{/if}}
+    {{/if}}
+</td>

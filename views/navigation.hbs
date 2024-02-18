@@ -1,0 +1,64 @@
+<header class="">
+    <div class="ray-page-container">
+        <div class="ray-grid p-2">
+            <div
+                class="ray-grid__cell--span-1 ray-grid ray-grid__cell--span-12-phone ray-grid__cell--span-12-tablet justify-content-around">
+                <!-- logo -->
+                <div class="ray-grid__cell--span-2-phone ray-gsrid ray-grid__cell--span-7-tablet p-0 m-0">
+                    <!-- <span class="text-center align-self-center">└</span> -->
+                    <a id="home-logo-btn" class="ray-text--monospace logo ray-grid__cell--span-full m-0">
+                        rmap.rs</a>
+                </div>
+
+                <!-- phone menu -->
+                <div
+                    class="phone-menu ray-grid m-0 ray-grid__cell--span-1-tablet ray-grid__cell--span-2-phone ray-grdid ray-grid__cell--span-1-tablet">
+                    <a href=""
+                        class="ray-grid__cell--span-12-phone text-align-right m-0 justify-contenst-end flsoat">Menu</a>
+                </div>
+            </div>
+
+            <div class="menu-phone-hidden ray-grid__cell--span-11">
+                <!-- search box -->
+                <div
+                    class="ray-grid__cell--span-11-desktop search float-md-end ray-grid__cell--span-5-tablet ray-grid__cell--span-12-phdone ray-grid m-0 p-0">
+                    <div class="ray-grid__cell--span-3 ray-grid__cell--span-12-phone ray-grid__cell--span-5-tablet m-0">
+                        <div class="ray-text-field ray-text-field--compact">
+                            <input class="ray-text-field__input form-control" id="q" name="q" type="search"
+                                placeholder="Start typing..." hx-trigger="search" hx-target="#search-results" hx-swap="innerHTML"
+                                hx-post="/search" hx-replace-url="false" />
+                            <label class="ray-text-field__label ray-text--body" for="email">
+                                Search repositories
+                            </label>
+                        </div>
+                    </div>
+
+                    <div
+                        class="ray-grid__cell--span-7-desktop ray-grid__cell--span-2-tablet ray-grid__cell--span-2-tablet justify-content-end token-chip">
+                        <div class="  ">
+                            <div tabindex="1" class="ray-chip ray-chip--disabled">
+                                {{coins}}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- account menu -->
+                    <ul
+                        class="logo ray-grid__cell--span-12-phone float-endd ray-grid__cell--span-3-tablet ray-grid__cell--span-2-desktop">
+                        <li class="float-end">
+                            <a class="account-nav pr-2">My account<span class="arrow">&#8675;</span></a>
+                            <ul class="droplist desktop-hidden" id="account-menu">
+                                <li class=" ">
+                                    <a class="graph-view-btn">Graph view</a>
+                                </li>
+                                <li class=" ">
+                                    <a href="/auth/destroy" class="">Sign out</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

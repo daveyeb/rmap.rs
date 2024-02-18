@@ -1,0 +1,106 @@
+<div class="ray-grid__cell--span-full  ray-page-container">
+    <h1 class="text-capitalize ray-text--h1 ray-grid__cell--span-12-desktop text-cesnter averia ">
+        welcome, {{name}} 👋
+    </h1>
+</div>
+
+<div class="ray-grid__cell--span-full ray-page-container  p-4">
+    <div class=" d-inline-flex ray-grid__cell--span-full justify-content-between">
+
+        <div class="ray-grid__cell--span-12-desktop repo">
+
+
+            <div class="top-repo smooth-border p-4 ">
+                <div class="ray-card__heading">Repositories</div>
+                <table class="ray-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <!-- <th>Email</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each repos as | r |}}
+                        <tr>
+                            <td>{{ r.full_name }}</td>
+                            <td>
+                                <button class="lil-smooth-border ray-button ray-button--secondary ray-button--compact"
+                                    id="gen-dash-btn">
+                                    Generate
+                                </button>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <div class="ray-grid__cell--span-12-desktop scans">
+            <div class="top-repo smooth-border p-4">
+                <div class="ray-card__heading">Scans</div>
+                <table class="ray-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <!-- <th>Email</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each scans as | s |}}
+                        <tr id="scan{{@index}}">
+                            {{#if s}}
+                            <td>{{s.name}}</td>
+                            <td class="flex justify-content-center">
+                                {{#if s.is_done}}
+                                <button class="ray-button ray-button--secondary ray-button--compact" id="load-btn">
+                                    Load
+                                </button>
+                                {{else}}
+                                {{#if s.is_error}}
+                                <button class="ray-button ray-button--secondary ray-button--compact" id="retry-btn">
+                                    Retry
+                                </button>
+                                {{else}}
+                                <div class="progress-bar">
+                                    {{> progress__bar class_name=s.class_name }}
+                                </div>
+                                {{/if}}
+                                {{/if}}
+                            </td>
+                            {{/if}}
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="ray-grid__cell--span-12-desktop interests">
+            <div class="top-repo smooth-border p-4">
+                <div class="ray-card__heading">Interests</div>
+                {{#each interests as | i |}}
+                <a href="javascript:;" class="ray-tag">{{i}}</a>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="ray-grid__cell--span-12-desktop activity ray-page-container">
+    <div class="top-repo smooth-border p-4 ray-grid__cell--span-full">
+        <div class="ray-card__heading">Scan Activity</div>
+        {{!-- <iframe credentialless width="100%" height="320" frameborder="0"
+            src="https://observablehq.com/embed/@mbostock/predator-and-prey?cells=predatorRateChart"></iframe> --}}
+
+            <div id="stats"></div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(this).scrollTop(0);
+    });
+    console.log("attempted to scroll to top")
+</script>

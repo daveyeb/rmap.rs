@@ -1,0 +1,23 @@
+{
+  "name": "rmap.rs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "keywords": [],
+  "author": "david yeboah",
+  "license": "ISC",
+  "devDependencies": {
+    "css-loader": "^6.10.0",
+    "style-loader": "^3.3.4",
+    "webpack": "^5.90.2",
+    "webpack-cli": "^5.1.4",
+    "worker-loader": "^3.0.8"
+  },
+  "dependencies": {
+    "request": "^2.79.0"
+  }
+}

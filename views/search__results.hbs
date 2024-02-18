@@ -1,0 +1,43 @@
+<div class="ray-page-container search-results">
+  <div class="ray-text--h1 ">Search results for {{search}}</div>
+  <span class="text-uppercase ray-text--monospace ">{{count}} results (About 30ms)</span>
+  <table class="ray-table">
+    <thead>
+      <tr>
+        <th>Repos</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- <tr> -->
+      <td class="">
+        {{#each repos as | r |}}
+        <div class="ray-grid__cell--span-full m-0">
+          <div class="ray-card__heading">{{ r.full_name }}</div>
+          <div>({{ r.description }})</div>
+
+          <div class="pb-2">
+            <span class="ray-tag"> ({{ r.language }})</span>
+          </div>
+          <div>
+            <button class="ray-button ray-button--secondary ray-button--compact" id="gen-btn">
+              Generate
+            </button>
+          </div>
+        </div>
+        {{/each}}
+      </td>
+      <!-- </tr> -->
+    </tbody>
+  </table>
+  {{#if repos}}
+  <div class="ray-grid justify-content-center">
+    <button class="ray-button ray-button--tertiary" disabled>
+      < Previous </button>
+        <button class="ray-button ray-button--tertiary">Next ></button>
+  </div>
+  {{/if}}
+</div>
+
+<script>
+  $('.test').css('height', `${$('main').height()}px`)
+</script>

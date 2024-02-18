@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'Apercu Mono';
+    src: url('/public/fonts/apercu-mono-webfont.woff2')
+        format('woff2'),
+      url('/public/fonts/apercu-mono-webfont.woff')
+        format('woff'),
+      url('/public/fonts/apercu-mono-webfont.ttf')
+        format('truetype'),
+      url('/public/fonts/apercu-mono-webfont.eot')
+        format('embedded-opentype');
+    font-display: swap;
+  }
