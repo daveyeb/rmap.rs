@@ -10,19 +10,17 @@ use crate::{
     state::AppState,
 };
 
-pub fn back_auth(state: AppState<'static>) -> Router {
+pub fn back_auth(state: &AppState<'static>) -> Router {
     Router::new()
-        // .route("/auth/session", get(routes::session::data_handler)) // gets session data
         .route("/", get(home_page))
-        .route("/auth/destroy", get(destroy)) // deletes username in session
-        .route("/auth/authorize", get(authorize)) // sets username in session
-        .route("/auth/callback", get(callback)) // deletes username in session
+        .route("/auth/destroy", get(destroy)) 
+        .route("/auth/authorize", get(authorize)) 
+        .route("/auth/callback", get(callback)) 
         .with_state(state.to_owned())
 }
 
-pub fn back_api(state: AppState<'static>) -> Router {
+pub fn back_api(state: &AppState<'static>) -> Router {
     Router::new()
-        // .route("/auth/session", get(routes::session::data_handler)) // gets session data
         .route("/blob", get(get_blob))
         .route("/dashboard", get(get_dashboard))
         .route("/dashboard", post(post_dashboard))

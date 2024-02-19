@@ -28,15 +28,16 @@ async fn main() -> Result<(), Error> {
     setup_logging();
 
     let session_store = MemoryStore::default();
-    let session_layer = SessionManagerLayer::new(session_store).with_name("rmap_session");
+    let session_layer = SessionManagerLayer::new(session_store).with_name("rmap_session").with_secure(false);
 
     let state = init_state().await;
     let app = Router::new()
-        .merge(services::back_auth(state.clone()))
-        .merge(services::back_api(state))
-        .nest_service("/pkg", ServeDir::new("./pkg/"))
+        .merge(services::back_auth(&state))
+        .merge(services::back_api(&state))
+        .layer(session_layer)
+        .nest_service("/public", ServeDir::new("./public/"))
         .nest_service("/dist", ServeDir::new("./dist"))
-        .nest_service("/public", ServeDir::new("./public"))
+        .nest_service("/pkg", ServeDir::new("./pkg"))
         .layer(middleware::from_fn(propagate_coop_coep_headers))
         .layer(
             ServiceBuilder::new()
@@ -46,7 +47,6 @@ async fn main() -> Result<(), Error> {
                         format!("Unhandled error: {}", err),
                     )
                 }))
-                .layer(session_layer)
                 .layer(BufferLayer::new(1024))
                 .layer(RateLimitLayer::new(5, Duration::from_secs(1))),
         );

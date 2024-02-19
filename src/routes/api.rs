@@ -1,4 +1,9 @@
-use std::{cmp::Ordering, collections::{HashSet, VecDeque}, ffi::OsStr, path::Path, str::FromStr};
+use std::{
+    collections::{HashSet, VecDeque},
+    ffi::OsStr,
+    path::Path,
+    str::FromStr,
+};
 
 use axum::{
     extract::{Query, State},
@@ -11,12 +16,12 @@ use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use tower_sessions::Session;
 
-use crate::{state::AppState, util::ModChar};
 use crate::{
     error::Error,
     // state::{copy_db, get_state, put_state, AppState},
     util::capitalize,
 };
+use crate::{state::AppState, util::ModChar};
 use serde_json::json;
 use std::fmt;
 use strum_macros::EnumString;
@@ -51,40 +56,45 @@ pub async fn search(
 ) -> Result<Response, Error> {
     let mut state_db = state.db.lock().await;
 
-    let username= session.get_value("rmap_username").await.unwrap().unwrap();
+    // let _username = session.get_value("rmap_username").await.unwrap().unwrap();
 
     // let state_result = get_state(&state.client_db, &username.value()).await;
     // if let Some(db_state) = state_result {
     //     copy_db(&db_state, &mut state_db);
     // }
+    let some = session.get_value("token").await.unwrap();
+    //TODO verify token
 
-    match session.get_value("token").await.unwrap() {
-        Some(token) => {
-            //TODO verify token
-            let response = search_repos(&query.q, token.as_str().unwrap(), &state.key).await;
+    let response; 
+    if let Some(token) = some {
+        response = search_repos_w_token(&query.q, token.as_str().unwrap(), &state.key).await;
+    } else {
+        response = search_repos(&query.q).await;
+    }
 
-            match response {
-                Ok(response) => {
-                    let headers = response.headers().clone();
-                    let repos = response.json::<RepoItems>().await.unwrap();
-                    state_db.search_repos = repos.items.clone();
-                    state_db.search_current = 1;
+    match response {
+        Ok(response) => {
+            println!("res  {:?}", response);
 
-                    if headers.contains_key("link") {
-                        state_db.search_link =
-                            headers.get("link").unwrap().to_str().unwrap().to_string();
-                    }
+            let headers = response.headers().clone();
+            let repos = response.json::<RepoItems>().await.unwrap();
+            state_db.search_repos = repos.items.clone();
+            state_db.search_current = 1;
 
-                    // retrieve first ten of repos
-                    let first_ten;
-                    if repos.items.len() < 10 {
-                        first_ten = repos.items.clone();
-                    } else {
-                        first_ten = repos.items[0..10].to_vec()
-                    }
+            if headers.contains_key("link") {
+                state_db.search_link = headers.get("link").unwrap().to_str().unwrap().to_string();
+            }
 
-                    // let _ = put_state(&state.client_db, &state_db).await;
-                    Ok(Html::from(
+            // retrieve first ten of repos
+            let first_ten;
+            if repos.items.len() < 10 {
+                first_ten = repos.items.clone();
+            } else {
+                first_ten = repos.items[0..10].to_vec()
+            }
+
+            // let _ = put_state(&state.client_db, &state_db).await;
+            Ok(Html::from(
                         state
                             .hb
                             .render(
@@ -94,11 +104,8 @@ pub async fn search(
                             .unwrap(),
                     )
                     .into_response())
-                }
-                Err(_) => Err(Error::InternalServerError),
-            }
         }
-        None => Err(Error::Unauthorized),
+        Err(_) => Err(Error::InternalServerError),
     }
 }
 
@@ -108,7 +115,7 @@ pub async fn get_repo(
     Query(repo_item): Query<RepoItem>,
 ) -> Result<Response, Error> {
     let mut state_db = state.db.lock().await;
-    let user = session.get_value("rmap_username").await.unwrap().unwrap();
+    let _user = session.get_value("rmap_username").await.unwrap().unwrap();
     let token = session.get_value("token").await.unwrap().unwrap();
     // let state_result = get_state(&state.client_db, &user).await;
     // if let Some(db_state) = state_result {
@@ -227,7 +234,7 @@ pub async fn get_scan(
 ) -> Result<Response, Error> {
     let mut state_db = state.db.lock().await;
 
-    let username= session.get_value("rmap_username").await.unwrap().unwrap();
+    let username = session.get_value("rmap_username").await.unwrap().unwrap();
     // let state_result = get_state(&state.client_db, &username.value()).await;
     // if let Some(db_state) = state_result {
     //     if let Some(db) = db_state.clone() {
@@ -319,11 +326,27 @@ pub async fn get_dashboard(
     session: Session,
     State(state): State<AppState<'_>>,
 ) -> Result<Response, Error> {
-    let mut state_db = state.db.lock().await;
-    let some = session.get_value("token").await.unwrap();
+    println!("here entering dash session {:?}\n\n", session);
+    let result = session.save().await;
+    if let Err(err) = result {
+        println!("fellow short error {:?}", err);
+    }
+    let _ = session.load().await;
+    let _ = session.load().await;
+    let _ = session.load().await;
+    let _ = session.load().await;
+    let _ = session.load().await;
+    let _ = session.load().await;
+    let _ = session.load().await;
 
+    println!("here entering dash session after lock {:?}\n\n", session);
+    let some = session.get_value("token").await.unwrap();
+    let key = session.get::<String>("token").await.unwrap();
+
+    println!("here entering dash some {:?} \n\n key {:?}", some, key);
     match some {
         Some(token) => {
+            let mut state_db = state.db.lock().await;
             print!("here token {:?}\n", token.as_str().unwrap());
             let mut ok =
                 verify_user(&decrypt_token(&token.as_str().unwrap(), state.key).await).await;
@@ -331,6 +354,7 @@ pub async fn get_dashboard(
 
             if response.status().is_client_error() {
                 let _flushed = session.flush().await;
+                println!("\n\nflushing and signing out");
 
                 return Ok(Html::from(
                     state
@@ -490,10 +514,8 @@ pub async fn post_dashboard(
 
                 put_stat(user.as_str().unwrap(), axum::extract::State(state), stats).await
             }
-            5 =>
-                get_stats(user.as_str().unwrap(), axum::extract::State(state))
-                    .await,
-            
+            5 => get_stats(user.as_str().unwrap(), axum::extract::State(state)).await,
+
             _ => Err(Error::BadRequest),
         }
     } else {
@@ -674,16 +696,11 @@ pub async fn get_links(
         .filter(|nodes| nodes.contains(repo_name))
         .collect::<Vec<Node>>();
 
-
-    println!("node_items {:?}\n\n result {:?}", state_db.nodes_items, result);
     let links = result.get(0).unwrap().links.clone().unwrap();
     Ok(axum::response::IntoResponse::into_response(Json(links)))
 }
 
-pub async fn get_stats(
-    user: &str,
-    State(state): State<AppState<'_>>,
-) -> Result<Response, Error> {
+pub async fn get_stats(user: &str, State(state): State<AppState<'_>>) -> Result<Response, Error> {
     let mut state_db = state.db.lock().await;
 
     // let state_result = get_state(&state.client_db, username).await;
@@ -718,7 +735,7 @@ pub async fn put_stat(
     )))
 }
 
-pub async fn search_repos(
+pub async fn search_repos_w_token(
     query: &str,
     token: &str,
     key: &[u8; 16],
@@ -729,6 +746,22 @@ pub async fn search_repos(
             query
         ))
         .bearer_auth(decrypt_token(token, *key).await)
+        .header("X-GitHub-Api-Version", "2022-11-28")
+        .header("User-Agent", "rtree")
+        .send()
+        .await;
+
+    response
+}
+
+pub async fn search_repos(
+    query: &str
+) -> Result<reqwest::Response, reqwest::Error> {
+    let response = Client::new()
+        .get(format!(
+            "https://api.github.com/search/repositories?q={}",
+            query
+        ))
         .header("X-GitHub-Api-Version", "2022-11-28")
         .header("User-Agent", "rtree")
         .send()

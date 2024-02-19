@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "build": "webpack && cp -r ./pkg ./dist/ && cp -r ./public/scripts/external ./public/scripts/index.js ./public/scripts/worker.js ./dist/public/scripts/"
   },
   "keywords": [],
   "author": "david yeboah",
@@ -18,6 +18,5 @@
     "worker-loader": "^3.0.8"
   },
   "dependencies": {
-    "request": "^2.79.0"
   }
 }

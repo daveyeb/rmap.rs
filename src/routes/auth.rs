@@ -6,12 +6,13 @@ use aes::{
 };
 use axum::{
     extract::{Query, State},
-    response::{IntoResponse, Redirect},
+    response::{Html, IntoResponse, Redirect},
 };
 use base64::{engine::general_purpose, Engine};
 use reqwest::Client;
 use serde::Deserialize;
 use tower_sessions::Session;
+use serde_json::json;
 
 use crate::{error::Error, state::AppState};
 
@@ -48,9 +49,18 @@ pub async fn callback(
             let json = json::parse(&res.text().await.unwrap()).unwrap();
             let token = json["access_token"].to_string().to_owned();
 
-            let _ = session.insert("token", encrypt_token(&token.clone(), state.key).await).await;
+            let _ = session.insert("token", encrypt_token(&token, state.key).await).await.unwrap();
 
-            Ok(Redirect::to("/dashboard").into_response())
+            Ok(Html::from(
+                state
+                    .hb
+                    .render(
+                        "redirect",
+                        &json!({}),
+                    )
+                    .unwrap(),
+            )
+            .into_response())
         }
         Err(_) => Err(Error::Unauthorized),
     }
